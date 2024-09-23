@@ -3,18 +3,24 @@ from ttkbootstrap.constants import *
 from tkinter import filedialog
 from concatFiles import ConcatFiles
 
+
+path_protime = r'./Protime'
+path_agency = r'./Agency'
+
 class App:
     def __init__(self, root):
         self.root = root
         self.root.title("COMPARE")
         self.root.geometry("400x200")
+        self.path_protime = r'./Protime'
+        self.path_agency = r'./Agency'
         
         # Creating a frame
         self.frame = ttk.Frame(self.root)
         self.frame.pack(pady=20)
 
         # Creating a label
-        self.label = ttk.Label(self.frame, text="Default Folder Agency", font=("Helvetica", 16))
+        self.label = ttk.Label(self.frame, text=f"{self.path_protime}", font=("Helvetica", 16))
         self.label.pack(pady=10)
 
         # Creating a button

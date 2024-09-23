@@ -1,9 +1,6 @@
 import os
 import pandas as pd
 
-path_protime = r'./Protime'
-path_agency = r'./Agency'
-
 class ConcatFiles:
     def __init__(self, path) -> None:
         """
