@@ -263,9 +263,8 @@ class DataModel:
             merged_df['Hours Difference'] = merged_df['Protime Hours'] - merged_df['Agency Hours']
             merged_df['Difference in Minutes'] = abs(merged_df['Hours Difference']) * 60
             merged_df['Invoice Difference'] = merged_df['Protime Invoice'] - merged_df['Agency Invoice']
-            merged_df['Overpay Request'] = (merged_df['Protime Invoice'] - merged_df['Agency Invoice']) < 0
-            merged_df['GXO Overpays'] = (merged_df['Protime Invoice'] - merged_df['Agency Invoice']) > 0
-
+            merged_df['Overpay Request'] = np.where((merged_df['Protime Invoice'] - merged_df['Agency Invoice']) < 0, abs(merged_df['Protime Invoice'] - merged_df['Agency Invoice']), 0)
+            merged_df['GXO Overpays'] = np.where((merged_df['Protime Invoice'] - merged_df['Agency Invoice']) > 0, abs(merged_df['Protime Invoice'] - merged_df['Agency Invoice']), 0)
             # Apply threshold if it is set
             conditions = pd.Series(True, index=merged_df.index)
             if self.threshold_minutes is not None and self.threshold_minutes > 0:
