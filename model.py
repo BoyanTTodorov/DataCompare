@@ -263,6 +263,8 @@ class DataModel:
             merged_df['Hours Difference'] = merged_df['Protime Hours'] - merged_df['Agency Hours']
             merged_df['Difference in Minutes'] = abs(merged_df['Hours Difference']) * 60
             merged_df['Invoice Difference'] = merged_df['Protime Invoice'] - merged_df['Agency Invoice']
+            merged_df['Overpay Request'] = (merged_df['Protime Invoice'] - merged_df['Agency Invoice']) < 0
+            merged_df['GXO Overpays'] = (merged_df['Protime Invoice'] - merged_df['Agency Invoice']) > 0
 
             # Apply threshold if it is set
             conditions = pd.Series(True, index=merged_df.index)
@@ -273,7 +275,7 @@ class DataModel:
             # **Add Totals Row**
             totals = diff_df[['Protime Hours', 'Agency Hours',
                               'Protime Invoice', 'Agency Invoice',
-                              'Hours Difference', 'Difference in Minutes', 'Invoice Difference']].sum(numeric_only=True)
+                              'Hours Difference', 'Difference in Minutes', 'Invoice Difference', 'Overpay Request', 'GXO Overpays']].sum(numeric_only=True)
             totals_row = pd.DataFrame({
                 'Week': ['Total'],
                 'Normalized Name': [''],
@@ -283,7 +285,10 @@ class DataModel:
                 'Agency Invoice': [totals['Agency Invoice']],
                 'Hours Difference': [totals['Hours Difference']],
                 'Difference in Minutes': [totals['Difference in Minutes']],
-                'Invoice Difference': [totals['Invoice Difference']]
+                'Invoice Difference': [totals['Invoice Difference']],
+                'Overpay Request': [totals['Overpay Request']],
+                'GXO Overpays': [totals['GXO Overpays']]
+
             })
 
             # Append the totals row to the DataFrame
