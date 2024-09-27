@@ -5,6 +5,7 @@ from view import DataView
 from model import DataModel
 import threading
 import os
+from datetime import datetime
 
 class DataController:
     def __init__(self):
@@ -81,10 +82,11 @@ class DataController:
             self.view.progress_bar.stop()
             print("Processing thread finished")
 
+        # Get's timestamp
     def get_timestamp(self):
-        from datetime import datetime
         return datetime.now().strftime("%Y%m%d_%H%M%S")
-
+    
+        # Init mainloop tkinter
     def start(self):
         print("Application started")
         self.root.mainloop()
