@@ -6,9 +6,6 @@ import re
 
 class DataModel:
     def __init__(self):
-        """
-        Initiate DataModel object into the momery
-        """
         self.path_agency = ''
         self.path_protime = ''
         self.threshold_minutes = None  # Optional
@@ -20,23 +17,14 @@ class DataModel:
 
     # Setters
     def set_agency_path(self, path):
-        """
-        Get's path to folder and assing it into property of DataModel
-        """
         self.path_agency = path
         print(f"Model: Agency path set to {path}")
 
     def set_protime_path(self, path):
-        """
-        Get's path to folder and assing it into property of DataModel
-        """
         self.path_protime = path
         print(f"Model: Protime path set to {path}")
 
     def set_threshold_minutes(self, minutes):
-        """
-        Get's treshhold in minutes in order to filter the output
-        """
         try:
             if minutes is not None and minutes != '':
                 self.threshold_minutes = float(minutes)
@@ -47,9 +35,6 @@ class DataModel:
             raise ValueError("Invalid input for threshold minutes. Please enter a numeric value.")
 
     def set_week_range(self, start_week, end_week):
-        """
-        Get's start end week range from the UI
-        """
         try:
             self.start_week = int(start_week) if start_week else None
             self.end_week = int(end_week) if end_week else None
@@ -57,45 +42,19 @@ class DataModel:
         except ValueError:
             raise ValueError("Invalid week numbers. Please enter numeric values.")
 
-    import re
-
     def normalize_name(self, name):
-        """
-        Normalize the name by:
-        - Converting it to lowercase
-        - Removing special characters except spaces and hyphens
-        - Removing middle names to match Agency names
-        - For hyphenated first names, only the first part before the hyphen is retained
-        """
         if isinstance(name, str):
-            # Convert to lowercase and remove unwanted characters
             name = name.lower()
-            name = re.sub(r'[^a-z\s\-]', '', name)
-            
-            # Normalize whitespace
+            name = name.replace('-', ' ')
             name = ' '.join(name.split())
-            
-            # Split the name into parts
             parts = name.split()
-            
-            # If the name contains more than two parts, remove the middle part(s)
             if len(parts) > 2:
-                # Handle hyphenated first names by splitting the first part and keeping only the first part
-                first_name = parts[0].split('-')[0]
-                last_name = parts[-1]
-                name = f"{first_name} {last_name}"
-            else:
-                # Handle cases where the name has two parts or less
-                name = ' '.join(parts)
-            
+                name = f"{parts[0]} {parts[-1]}"
             return name
-        return None
-
+        else:
+            return ''
 
     def load_data(self):
-        """
-        Load data from path and check fo errors
-        """
         try:
             print("Model: Loading agency data")
             # Load Agency Data
@@ -127,16 +86,6 @@ class DataModel:
             raise e
 
     def clean_protime_data(self):
-        """
-        Data Cleaning Steps:
-            - Allocating memory for the DataFrame
-            - Converting the 'Week' column to the appropriate data type
-            - Renaming columns for clarity
-            - Removing unnecessary columns
-            - Filtering data based on start and end week
-            - Applying a filter for 'OTTO'
-            - Trimming any leading or trailing spaces in the data
-        """
         try:
             print("Model: Cleaning protime data")
             df = self.protime_data.copy()
@@ -160,19 +109,9 @@ class DataModel:
             print(f"Model: Protime data cleaned with {len(df)} records")
         except Exception as e:
             print(f"Model: Error cleaning protime data - {e}")
-            raise Exception(f'Exception occurred while cleaning Protime data: {e}\nRestart App')
+            raise Exception(f'Exception occurred while cleaning Protime data: {e}')
 
     def clean_agency_data(self):
-        """
-        Data Cleaning Steps:
-            - Allocating memory for the DataFrame
-            - Converting the 'Week' column to the appropriate data type
-            - Renaming columns for clarity
-            - Removing unnecessary columns
-            - Filtering data based on start and end week
-            - Applying a filter for 'OTTO'
-            - Trimming any leading or trailing spaces in the data
-        """
         try:
             print("Model: Cleaning agency data")
             df = self.agency_data.copy()
@@ -200,12 +139,6 @@ class DataModel:
             raise Exception(f'Exception occurred while cleaning Agency data: {e}')
 
     def process_data(self):
-        """
-            After cleaning process:
-                - Removing middle name if any
-                - Only if there are names what to compere if therare not :)
-                - Aggregating by name and week and after that merge df
-        """
         try:
             print("Model: Processing data")
             if self.protime_data.empty or self.agency_data.empty:

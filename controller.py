@@ -15,36 +15,29 @@ class DataController:
         print("Controller initialized")
 
     def run_processing(self):
-        """
-        Main process function starts modeling
-        """
         print("Run button clicked")
         # Get inputs from the view
-        try:
-            self.model.set_agency_path(self.view.agency_path)
-            self.model.set_protime_path(self.view.protime_path)
-            self.model.set_threshold_minutes(self.view.threshold_minutes_var.get())
-            start_week = self.view.start_week_var.get()
-            end_week = self.view.end_week_var.get()
-            print(f"Start Week Entry: {start_week}")
-            print(f"End Week Entry: {end_week}")
-            self.model.set_week_range(start_week, end_week)
-            print(f"Agency Path: {self.view.agency_path}")
-            print(f"Protime Path: {self.view.protime_path}")
-            print(f"Threshold Minutes: {self.model.threshold_minutes}")
-            print(f"Start Week: {self.model.start_week}")
-            print(f"End Week: {self.model.end_week}")
-            # Disable the run button during processing
-            self.view.run_button.config(state='disabled')
-            self.view.status_label.config(text="Processing...")
-            self.view.progress_bar.start()
-            threading.Thread(target=self.process_data_thread).start()
-            print("Processing thread started")
-        except Exception as e:
-            # Show error message
-            print(f"Error occurred: {e}")
-            messagebox.showerror("Error", str(e))
-            self.view.status_label.config(text=f"Error: {e}")
+        self.model.set_agency_path(self.view.agency_path)
+        self.model.set_protime_path(self.view.protime_path)
+        self.model.set_threshold_minutes(self.view.threshold_minutes_var.get())
+        start_week = self.view.start_week_var.get()
+        end_week = self.view.end_week_var.get()
+        print(f"Start Week Entry: {start_week}")
+        print(f"End Week Entry: {end_week}")
+        self.model.set_week_range(start_week, end_week)
+        print(f"Agency Path: {self.view.agency_path}")
+        print(f"Protime Path: {self.view.protime_path}")
+        print(f"Threshold Minutes: {self.model.threshold_minutes}")
+        print(f"Start Week: {self.model.start_week}")
+        print(f"End Week: {self.model.end_week}")
+        # Disable the run button during processing
+        self.view.run_button.config(state='disabled')
+        self.view.status_label.config(text="Processing...")
+        self.view.progress_bar.start()
+
+        # Run the data processing in a separate thread to keep the UI responsive
+        threading.Thread(target=self.process_data_thread).start()
+        print("Processing thread started")
 
     def process_data_thread(self):
         try:
